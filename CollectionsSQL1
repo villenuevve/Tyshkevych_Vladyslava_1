@@ -1,0 +1,128 @@
+using System;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+namespace lb_1
+{
+    class MainClass
+    {
+        public static StreamWriter StreamReader { get; private set; }
+
+        static void Main(string[] args)
+        {
+            Task0();
+            Task1();
+            Task2();
+        }
+
+        static void Task0()
+        {
+            //ЗАВДАННЯ 1 (коллекції)
+
+            //Дано список з чисел та індекс елемента в списку k.
+            //Видаліть зі списку елемент з індексом k,
+            //зсунувши вгору всі елементи, що стоять нижче елемента з індексом k
+
+            Console.WriteLine("Завдання 1");
+
+            var number = new List<int> { 55, 56, 57, 58, 59, 60 };
+
+            Console.WriteLine();
+            Console.Write("Введіть індекс k:");
+
+
+            int indx = int.Parse(Console.ReadLine());
+            Console.WriteLine();
+            number.RemoveAt(indx - 1);
+
+            foreach (int numbers in number)
+            {
+                Console.Write(numbers + "\n");
+            }
+
+        }
+        static void Task1()
+        {
+            //ЗАВДАННЯ 2  (словник)
+
+            //Знайти найбільше та найменше значення словника,
+            //видалити їх та відсортувати словник по ключам.
+            //зберегти словвник у форматі json
+
+            Dictionary<int, string> math = new Dictionary<int, string>();
+            {
+                math.Add(1, "55");
+                math.Add(6, "60");
+                math.Add(2, "56");
+                math.Add(4, "58");
+                math.Add(5, "59");
+                math.Add(3, "57");
+            };
+
+            Console.WriteLine();
+            Console.WriteLine("Завдання 2");
+            Console.WriteLine();
+
+            math.Remove(1);
+            math.Remove(6);
+
+            foreach (KeyValuePair<int, string> user in math.OrderBy(user => user.Value))
+            {
+                Console.WriteLine(user.Key + "- ключ числа " + user.Value);
+            }
+
+            string jsn1 = JsonConvert.SerializeObject(math);
+
+            JsonSerializer srl = new JsonSerializer();
+            
+            srl.NullValueHandling = NullValueHandling.Ignore;
+
+            using (StreamWriter sw = new StreamWriter(@"/Users/vlodochka1/Desktop/laba 1.txt"))
+            using (JsonWriter wr = new JsonTextWriter(sw))
+            {
+                srl.Serialize(wr, math);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Оновлена кількість елементів: " + math.Count);
+            Console.WriteLine();
+            Console.WriteLine("Текст записанo в файл");
+        }
+        
+        private static void Task2()
+        {
+            //ЗАВДАННЯ 3 SQL
+
+            //Дано символ С і строкова послідовність A.
+            //Якщо A містить єдиний елемент, що закінчується символом C,
+            //то вивести цей елемент;
+            //якщо необхідних рядків в A немає, то вивести порожній рядок;
+            //якщо необхідних рядків більше одного, то вивести рядок «Error».
+            //Використовувати try-блок для перехоплення можливого виключення.
+
+            Console.WriteLine();
+            Console.WriteLine("Завдання 3");
+            Console.WriteLine();
+
+            try
+            {
+                List<string> lst = new List<string>() { "55", "56", "57", "58", "59", "60" };
+                IEnumerable<string> fin = lst.Where(l => l.EndsWith("0"));
+                string[] k = lst.Select(i => i.ToString()).ToArray();
+
+                if (k.SingleOrDefault(nmb => nmb.EndsWith("0")) == null)
+                {
+                    Console.WriteLine("пустий рядок");
+                }
+                else
+                Console.WriteLine(k.SingleOrDefault(nmb => nmb.EndsWith("0")));
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("Error");
+            }
+
+        }
+    }
+}
